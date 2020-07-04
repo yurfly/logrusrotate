@@ -1,4 +1,11 @@
 ```golang
+package main
+
+import (
+	"time"
+	"github.com/yurfly/logrusrotate"
+	"github.com/sirupsen/logrus"
+)
 
 func main() {
 	logrus.SetReportCaller(true)
@@ -24,21 +31,22 @@ func main() {
 	logrus.SetFormatter(customFormatter)
 	logrus.SetLevel(logrus.DebugLevel)
 
-	logger := NewLogger()
+	logger := logrusrotate.NewLogger()
 	logger.MaxSizeMb = 2
 	logger.MaxAge = 2
 	logger.MaxBackups = 5
-	hook, err := NewHook(
+	hook, err := logrusrotate.NewHook(
 		logger,
 		logrus.InfoLevel,
 		customFormatter,
-		&LogFileOpts{},
+		&logrusrotate.LogFileOpts{},
 	)
 	if err != nil {
 		panic(err)
 	}
 
 	logrus.AddHook(hook)
+
 	for {
 		logrus.Debug("Debug message")
 		logrus.Info("Info message")
@@ -47,5 +55,6 @@ func main() {
 		time.Sleep(time.Duration(1) * time.Millisecond)
 	}
 }
+
 
 ```
